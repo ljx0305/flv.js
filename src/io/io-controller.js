@@ -68,7 +68,7 @@ class IOController {
         this._seekHandler = null;
 
         this._dataSource = dataSource;
-        this._isWebSocketURL = /wss?:\/\/(.+?)\//.test(dataSource.url);
+        this._isWebSocketURL = /wss?:\/\/(.+?)/.test(dataSource.url);
         this._refTotalLength = dataSource.filesize ? dataSource.filesize : null;
         this._totalLength = this._refTotalLength;
         this._fullRequestFlag = false;
@@ -237,7 +237,9 @@ class IOController {
     }
 
     _selectLoader() {
-        if (this._isWebSocketURL) {
+        if (this._config.customLoader != null) {
+            this._loaderClass = this._config.customLoader;
+        } else if (this._isWebSocketURL) {
             this._loaderClass = WebSocketLoader;
         } else if (FetchStreamLoader.isSupported()) {
             this._loaderClass = FetchStreamLoader;
